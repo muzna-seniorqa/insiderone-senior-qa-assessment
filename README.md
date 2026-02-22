@@ -22,10 +22,18 @@ This repository contains:
 ## 🔗 API Automation
 - Swagger Petstore APIs tested
 - Endpoints: Create, Read, Update, Delete Pet
-- Tool: Postman
+- Tool: Postman + newman
   
 ---
 
 ## ⚡ Load Testing
 - Tool: JMeter
 - Target: n11.com search
+
+## ⚡ Required Tools
+
+- Python
+- Chrome/Firefox
+- Node + Newman
+- Postman
+- JMeter
