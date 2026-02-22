@@ -1,0 +1,1518 @@
+{
+  "info": {
+    "_postman_id": "5d73279b-1782-4937-aa1a-9db8c6dbf323",
+    "name": "Swagger Petstore API Automation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "15719019"
+  },
+  "item": [
+    {
+      "name": "Create Pet (Post)",
+      "item": [
+        {
+          "name": "Positive Test Case",
+          "item": [
+            {
+              "name": "Create Pet - Positive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse response safely",
+                      "let jsonData = {};",
+                      "try {",
+                      "  jsonData = pm.response.json();",
+                      "} catch (e) {",
+                      "  jsonData = {};",
+                      "}",
+                      "",
+                      "// Parse request body to make assertions dynamic",
+                      "let requestBody = {};",
+                      "try {",
+                      "  requestBody = pm.request.body && pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+                      "} catch (e) {",
+                      "  requestBody = {};",
+                      "}",
+                      "",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "  pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Response has expected fields\", function () {",
+                      "  pm.expect(jsonData).to.be.an(\"object\");",
+                      "  pm.expect(jsonData).to.have.property(\"id\");",
+                      "  pm.expect(jsonData).to.have.property(\"name\");",
+                      "  pm.expect(jsonData).to.have.property(\"status\");",
+                      "});",
+                      "",
+                      "pm.test(\"Name matches request body\", function () {",
+                      "  pm.expect(requestBody).to.have.property(\"name\");",
+                      "  pm.expect(jsonData.name).to.eql(requestBody.name);",
+                      "});",
+                      "",
+                      "pm.test(\"Status is available\", function () {",
+                      "  pm.expect(jsonData.status).to.eql(\"available\");",
+                      "});",
+                      "",
+                      "// Keep saving petId to the active environment if id exists (no pm.test around it)",
+                      "if (jsonData && jsonData.id !== undefined && jsonData.id !== null) {",
+                      "  pm.environment.set(\"petId\", String(jsonData.id));",
+                      "}",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{$randomInt}},\r\n  \"name\": \"Oreo\",\r\n  \"status\": \"available\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create Pet - Negative (Bug Tracking)",
+          "item": [
+            {
+              "name": "Missing required field",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{$randomInt}},\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Empty name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{$randomInt}},\r\n  \"name\": \"\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid status enum",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{$randomInt}},\r\n  \"name\": \"Oreo\",\r\n  \"status\": \"INVALID_STATUS\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Wrong type for ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": \"abc\",\r\n  \"name\": \"Oreo\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Negative ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": -1,\r\n  \"name\": \"Oreo\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Duplicate ID",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{petId}},\r\n  \"name\": \"Oreo\",\r\n  \"status\": \"available\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Unsupported media type",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "text/plain",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"id\": 1, \"name\": \"Oreo\", \"status\": \"available\"}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {},
+                "exec": [
+                  ""
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "requests": {},
+                "exec": [
+                  "// Folder-level post-response tests for negative Create Pet scenarios",
+                  "// Special-case: only the request named exactly \"unsupported media type\" (case-insensitive)",
+                  "// is expected to return 415. All other requests should be 4xx (but not 5xx).",
+                  "",
+                  "const requestNameLc = (pm.info.requestName || \"\").toLowerCase().trim();",
+                  "const is415Case = requestNameLc === \"Unsupported media type\";",
+                  "",
+                  "pm.test(\"Status code is within 4xx (excluding unsupported media type case) and not 5xx\", function () {",
+                  "  if (is415Case) {",
+                  "    pm.response.to.have.status(415);",
+                  "    pm.test(\"Expected Error code is 415: Unsupported Media Type\", function() {",
+                  "        pm.expect(pm.response.code).to.eql(415);  // Validate 415 explicitly",
+                  "    });",
+                  "  } else {",
+                  "    pm.expect(pm.response.code).to.be.within(400, 499, \"The status code is within the 4xx range.\");",
+                  "    pm.expect(pm.response.code).to.not.be.within(500, 599, \"The status code is not within the 5xx range.\");",
+                  "  }",
+                  "});",
+                  "",
+                  ""
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Get Pet (Get)",
+      "item": [
+        {
+          "name": "Positive Test Case",
+          "item": [
+            {
+              "name": "Get Pet - Positive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonData = {};\r",
+                      "\r",
+                      "try {\r",
+                      "    jsonData = pm.response.json();\r",
+                      "} catch (e) {\r",
+                      "    jsonData = {};\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Correct pet returned\", function () {\r",
+                      "    pm.expect(jsonData.id).to.eql(Number(pm.environment.get(\"petId\")));\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pet/{{petId}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet",
+                    "{{petId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative Test Case + Edge Case\\",
+          "item": [
+            {
+              "name": "Get Pet - Negative (Bug Tracking)",
+              "item": [
+                {
+                  "name": "Non-existent petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"99999999\"); // keep as string; it’ll be substituted into the URL"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error message is correct\", function () {\r",
+                          "    pm.expect(jsonData.message).to.eql(\"Pet not found\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Error type is correct\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"error\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "String petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"why\"); // keep as string; it’ll be substituted into the URL"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error type is unknown\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"unknown\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Message contains NumberFormatException\", function () {\r",
+                          "    pm.expect(jsonData.message).to.include(\"NumberFormatException\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Decimal petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"12.34\"); // keep as string; it’ll be substituted into the URL"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error type is unknown\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"unknown\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Message contains NumberFormatException\", function () {\r",
+                          "    pm.expect(jsonData.message).to.include(\"NumberFormatException\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Negative petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"-1\"); // keep as string; it’ll be substituted into the URL"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error message is correct\", function () {\r",
+                          "    pm.expect(jsonData.message).to.eql(\"Pet not found\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Error type is correct\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"error\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Very long petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"999999999999999999999999\"); // keep as string; it’ll be substituted into the URL"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error type is unknown\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"unknown\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Message contains NumberFormatException\", function () {\r",
+                          "    pm.expect(jsonData.message).to.include(\"NumberFormatException\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "let jsonData = {};\r",
+                      "\r",
+                      "try {\r",
+                      "    jsonData = pm.response.json();\r",
+                      "} catch (e) {\r",
+                      "    jsonData = {};\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Error response structure is correct\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"code\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"type\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\");\r",
+                      "});\r",
+                      ""
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Pet - SQL Injection Attempt",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "exec": [
+                      "pm.variables.set(\"petId\", \"1;DROP TABLE pets;\"); //the API should extract the numeric portion and returned pet ID 1 and ingores the rest."
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonData = {};\r",
+                      "\r",
+                      "try {\r",
+                      "    jsonData = pm.response.json();\r",
+                      "} catch (e) {\r",
+                      "    jsonData = {};\r",
+                      "}\r",
+                      "\r",
+                      "pm.test(\"Status code is 200 (API parsed numeric ID)\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Returned pet ID is 1 (numeric portion extracted)\", function () {\r",
+                      "    pm.expect(jsonData.id).to.eql(1);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response contains expected structure\", function () {\r",
+                      "    pm.expect(jsonData).to.have.property(\"id\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"name\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Status field is valid value\", function () {\r",
+                      "    pm.expect([\"available\", \"pending\", \"sold\"]).to.include(jsonData.status);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/pet/{{petId}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet",
+                    "{{petId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Update Pet (Put)",
+      "item": [
+        {
+          "name": "Positive Test Case",
+          "item": [
+            {
+              "name": "Update Pet - Positive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// Parse response safely",
+                      "let jsonData = {};",
+                      "try {",
+                      "  jsonData = pm.response.json();",
+                      "} catch (e) {",
+                      "  jsonData = {};",
+                      "}",
+                      "",
+                      "// Parse request body to make assertions dynamic",
+                      "let requestBody = {};",
+                      "try {",
+                      "  requestBody = pm.request.body && pm.request.body.raw ? JSON.parse(pm.request.body.raw) : {};",
+                      "} catch (e) {",
+                      "  requestBody = {};",
+                      "}",
+                      "",
+                      "pm.test(\"Status code is 200\", function () {",
+                      "  pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test(\"Response has expected fields\", function () {",
+                      "  pm.expect(jsonData).to.be.an(\"object\");",
+                      "  pm.expect(jsonData).to.have.property(\"id\");",
+                      "  pm.expect(jsonData).to.have.property(\"name\");",
+                      "  pm.expect(jsonData).to.have.property(\"status\");",
+                      "});",
+                      "",
+                      "pm.test(\"Name matches request body\", function () {",
+                      "  pm.expect(requestBody).to.have.property(\"name\");",
+                      "  pm.expect(jsonData.name).to.eql(requestBody.name);",
+                      "});",
+                      "",
+                      "pm.test(\"Status is sold\", function () {",
+                      "  pm.expect(jsonData.status).to.eql(\"sold\");",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"id\": {{petId}},\r\n  \"name\": \"Prince\",\r\n  \"status\": \"sold\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative Test Cases",
+          "item": [
+            {
+              "name": "Update Pet - Negative (Bug Tracking)",
+              "item": [
+                {
+                  "name": "Non-integer ID",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"Invalid ID type\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": \"abc\",\r\n    \"name\": \"milo\",\r\n    \"status\": \"sold\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Negative ID",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"ID must be positive\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": -5,\r\n    \"name\": \"milo\",\r\n    \"status\": \"sold\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Missing required field",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"Name is required\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": 92,\r\n    \"status\": \"sold\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Empty body",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"missing required field or body is empty\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Invalid status",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"Status is invalid\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": 98,\r\n    \"name\": \"Milo\",\r\n    \"status\": \"flying\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Malformed Json",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Status code is 400-500\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 500]);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Response contains error message\", function () {\r",
+                          "    pm.expect(pm.response.text()).to.include(\"Bad Request\"); // adjust for each test\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "disabledSystemHeaders": {
+                      "content-type": true,
+                      "content-length": true,
+                      "host": true,
+                      "user-agent": true,
+                      "accept": true,
+                      "accept-encoding": true,
+                      "connection": true
+                    }
+                  },
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": 98\r\n    \"name\": \"Milo\",\r\n    \"status\": \"flying\"\r\n}\r\n",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{base_url}}/pet",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Delete Pet (Delete)",
+      "item": [
+        {
+          "name": "Positive Test Case",
+          "item": [
+            {
+              "name": "Delete Pet - Positive",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "// 1. Validate HTTP status code\r",
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "// 2. Validate response body has correct fields\r",
+                      "pm.test(\"Response body has correct structure\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    \r",
+                      "    pm.expect(jsonData).to.have.property(\"code\", 200);\r",
+                      "    pm.expect(jsonData).to.have.property(\"type\", \"unknown\");\r",
+                      "    pm.expect(jsonData).to.have.property(\"message\", pm.variables.get(\"petId\").toString());\r",
+                      "});\r",
+                      "\r",
+                      "// 3. Optional: Validate message matches petId\r",
+                      "pm.test(\"Deleted petId is correct\", function () {\r",
+                      "    var jsonData = pm.response.json();\r",
+                      "    var petId = pm.variables.get(\"petId\").toString();\r",
+                      "    \r",
+                      "    pm.expect(jsonData.message).to.eql(petId);\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/pet/{{petId}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "pet",
+                    "{{petId}}"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Negative Test Cases",
+          "item": [
+            {
+              "name": "Delete Pet - Negative (Bug Tracking)",
+              "item": [
+                {
+                  "name": "Non-existent petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"9877\"); // local to this run; overrides environment during this request"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Invalid ID type",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"abc\"); // local to this run; overrides environment during this request"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonData = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Error type is unknown\", function () {\r",
+                          "    pm.expect(jsonData.type).to.eql(\"unknown\");\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Message contains NumberFormatException\", function () {\r",
+                          "    pm.expect(jsonData.message).to.include(\"NumberFormatException\");\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Negative petID",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"-4\"); // local to this run; overrides environment during this request"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/{{petId}}",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        "{{petId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Missing path parameter",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.variables.set(\"petId\", \"64\"); // local to this run; overrides environment during this request"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Response message indicates 405 method not allowed\", function () {\r",
+                          "    pm.expect(pm.response.code).to.be.oneOf([400, 405]);\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {},
+                        "requests": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{base_url}}/pet/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "pet",
+                        ""
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      ""
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {},
+                    "exec": [
+                      "pm.test(\"Status code is 404\", function () {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "});"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

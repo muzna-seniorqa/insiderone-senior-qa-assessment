@@ -1,0 +1,9 @@
+# QA jobs filter criteria - single source of truth for filter + assertions
+filter:
+  location: "Istanbul, Turkiye"
+  department: "Quality Assurance"
+
+expected_position_contains: "Quality Assurance"
+
+# Lever application page (redirect target). Use without trailing slash so it matches URLs like .../insiderone/abc-123
+lever_domain: "jobs.lever.co/insiderone"
